@@ -3,6 +3,21 @@ import json
 fen_start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 fen_start_simbol = "♜♞♝♛♚♝♞♜/♟♟♟♟♟♟♟♟/8/8/8/8/♙♙♙♙♙♙♙♙/♖♘♗♕♔♗♘♖"
 
+UNICODE_PIECES = {
+    "K": "♔",
+    "Q": "♕",
+    "R": "♖",
+    "B": "♗",
+    "N": "♘",
+    "P": "♙",
+    "k": "♚",
+    "q": "♛",
+    "r": "♜",
+    "b": "♝",
+    "n": "♞",
+    "p": "♟",
+    " ": " ",
+}
 
 def fen2matrix(fen):
     def row2list(row):
@@ -50,21 +65,28 @@ def matrix2fen(board):
 
     return fen[:-1]
 
+def print_board(board, unicode=False):
+    if unicode:
+        board_copy =[]
+        row = []
+        for line in board:
+            for element in line:
+                row.append(element)
+            board_copy.append(row)
+            row = []
+        for row in board_copy:
+            for i,e in enumerate(row):
+                if e != ' ':
+                    row[i] = UNICODE_PIECES.get(e)
+    print("\n  +---+---+---+---+---+---+---+---+")
+    for i, row in enumerate(board_copy):
+        rank = 8 - i
+        print(f"{rank} | " + " | ".join(row) + " |")
+        print("  +---+---+---+---+---+---+---+---+")
+    print("    a   b   c   d   e   f   g   h\n")
 
-def show_board(
-    board: list[list],
-):  # : list[list] serve per dire al compilatore che tipo di oggetto è board
-    n = 8
-    for riga in board:
-        print("   +---+---+---+---+---+---+---+---+")
-        print(n, end="  ")
-        n -= 1
-        for elemento in riga:
-            print("|", end=" ")
-            print(elemento, end=" ")
-        print("|")
-    print("")
-    print("     a   b   c   d   e   f   g   h   ")
+
+
 
 
 board = fen2matrix(fen_start)

@@ -1,7 +1,6 @@
 import json
-from utils import show_board
-from pawn import valid_pawn_move
-from print_board import print_board
+from utils import print_board
+from piece_rule import valid_piece_move
 
 with open("board.json", "r") as f:
     board = json.loads(f.read())
@@ -9,7 +8,7 @@ with open("board.json", "r") as f:
 col = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
 
 while True:
-    # 1. show board
+    # 1. print board
     print_board(board,unicode=True)
 
     # 2. get user input move
