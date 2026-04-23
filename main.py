@@ -49,7 +49,7 @@ while True:
 
     col_end = int(col.get(move_end[0]))
     row_end = int(move_end[-1]) - 1
-    if valid_pawn_move(col_start,row_start,col_end,row_end,board):
+    if not valid_piece_move(col_start,row_start,col_end,row_end,board):
         print("\nIllegal move\n")
 
         continue
