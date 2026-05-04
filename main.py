@@ -1,58 +1,39 @@
 import json
-from utils import print_board
+from utils import *
 from piece_rule import valid_piece_move
 
 with open("board.json", "r") as f:
     board = json.loads(f.read())
 
-col = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
 
 while True:
-    # 1. print board
     print_board(board,unicode=True)
-
-    # 2. get user input move
-    move = input("\nPlay your move!\n\n>>> ")
-       
-
-    # 2.1 parse user input (dividere un input in sottoclassi)
-    move_start, move_end = move[:2], move[-2:]
-    col_start = move_start[0].lower()
-    row_start = move_start[-1]
-    if move.lower() == "q":
-
+    inp = input("\nSelect piece to move!\n\n>>> ")
+    if inp == "qQ":
         break
-    if len(move) != 4 :
-        print("Invalid move")
+    piece_start = check_input(inp)
+    if not piece_start :
+        print("Invalid command")
+    row_start = piece_start[0]
+    col_start = piece_start[1]
+    legal_move = valid_piece_move(col_start,row_start,board)
+    if not legal_move : 
+        print("Chose a valid piece")
         continue
-    
-    if col_start not in "abcdefgh":
-        print("Invalid move")
+    print_board(board,col_start = col_start,row_start = row_start,legal_move = legal_move,unicode=True,moves=True)
+    inp = input("\nSelect your move\n\n")
+    if inp == "qQ":
+        break
+    piece_end = check_input(inp)
+    if not piece_end:
+        print("Invalid commnad")
         continue
-    
-    if row_start not in "12345678":
-        print("Invalid move")
-        continue
-        
-    col_end = move_start[0].lower()
-    row_end = move_start[-1]
-
-    if col_end not in "abcdefgh":
-        print("Invalid move")
-        continue
-    
-    if row_end not in "12345678":
-        print("Invalid move")
-        continue
-    col_start = int(col.get(move_start[0]))    
-    row_start = int(move_start[-1]) - 1
-
-    col_end = int(col.get(move_end[0]))
-    row_end = int(move_end[-1]) - 1
-    if not valid_piece_move(col_start,row_start,col_end,row_end,board):
+    row_end = piece_end[0]
+    col_end = piece_end[1]
+    move = (row_end - row_start, col_end - col_start)
+    if not move in legal_move:
         print("\nIllegal move\n")
-
-        continue
+        continue 
 
 
     
@@ -60,7 +41,6 @@ while True:
     piece_end = board[::-1][row_end][col_end]
      #parsinig 
 
-    if piece_start !=" ":
-         board[::-1][row_start][col_start] =" "
-         board[::-1][row_end][col_end] = piece_start
+    board[::-1][row_start][col_start] =" "
+    board[::-1][row_end][col_end] = piece_start
 

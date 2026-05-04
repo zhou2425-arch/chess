@@ -2,6 +2,7 @@ import json
 
 fen_start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 fen_start_simbol = "♜♞♝♛♚♝♞♜/♟♟♟♟♟♟♟♟/8/8/8/8/♙♙♙♙♙♙♙♙/♖♘♗♕♔♗♘♖"
+cols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
 
 UNICODE_PIECES = {
     "K": "♔",
@@ -65,7 +66,7 @@ def matrix2fen(board):
 
     return fen[:-1]
 
-def print_board(board, unicode=False):
+def print_board(board:list[list],col_start = None,row_start=None ,legal_move =None,unicode=False, moves = False):
     if unicode:
         board_copy =[]
         row = []
@@ -78,6 +79,11 @@ def print_board(board, unicode=False):
             for i,e in enumerate(row):
                 if e != ' ':
                     row[i] = UNICODE_PIECES.get(e)
+    if moves :
+        for i, e in legal_move:
+            board_copy[::-1][row_start + i][col_start + e] = "●"
+
+
     print("\n  +---+---+---+---+---+---+---+---+")
     for i, row in enumerate(board_copy):
         rank = 8 - i
@@ -86,9 +92,28 @@ def print_board(board, unicode=False):
     print("    a   b   c   d   e   f   g   h\n")
 
 
+def check_input ( inp ):
+    col = inp[0].lower()
+    row = inp[-1]
+    if len(inp) != 2 :
+        print("Invalid command")
+        return False
+    
+    if col not in "abcdefgh":
+        print("Out of board")
+        return False
 
+    
+    if row not in "12345678":
+        print("Out of board")
+        return False
+
+    col = cols.get(col)
+    row = int(row) - 1
+    return [row,col]
 
 
 board = fen2matrix(fen_start)
 with open("board.json", "w") as f:
     f.write(json.dumps(board))
+a = []
